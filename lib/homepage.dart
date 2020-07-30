@@ -118,7 +118,7 @@ class homepageState extends State<homepage> {
   }
 
   //UPDATE DATA
-  _updateData(Student student){
+  /*_updateData(Student student){
     setState(() {
       _isUpdating = true;
     });
@@ -132,7 +132,7 @@ class homepageState extends State<homepage> {
         _clearValues();
       }
     });
-  }
+  }*/
 
   //DELETE DATA 
   _deleteData(Student student){

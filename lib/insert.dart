@@ -120,7 +120,7 @@ class homepageState extends State<Insert> {
       _isUpdating = true;
     });
     //_showSnackBar('Updating Student...');
-    BDConnections.updateData(student.id, _firstnameConroller.text, _lastname1Conroller.text, _lastname2Conroller.text, _emailConroller.text, _phoneConroller.text, _matriculaConroller.text).then((result){
+    BDConnections.updateData(student.id, _firstnameConroller.text, _lastname1Conroller.text, _lastname2Conroller.text, _emailConroller.text, _phoneConroller.text, _matriculaConroller.text, _fotoConroller.text).then((result){
       if('success' == result){
         _selectData; //REFRESH LIST AFTER UPDATE
         setState(() {
@@ -146,7 +146,7 @@ class homepageState extends State<Insert> {
     ImagePicker.pickImage(source: ImageSource.gallery).then((imgFile){
       String  imgString = Convertir.base64String(imgFile.readAsBytesSync());
       imagen = imgString;
-      Navigator.of(context).pop();
+      //Navigator.of(context).pop();
       _fotoConroller.text = "Campo lleno";
       return imagen;
     });
