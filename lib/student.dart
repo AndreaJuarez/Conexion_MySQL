@@ -6,8 +6,9 @@ class Student {
   String email;
   String phone;
   String matricula;
+  String foto;
 
-  Student({this.id, this.firstName, this.lastName1, this.lastName2, this.email, this.phone, this.matricula});
+  Student({this.id, this.firstName, this.lastName1, this.lastName2, this.email, this.phone, this.matricula, this.foto});
 
   //Patrones de diseño, ventajas de regresar un objeto
   factory Student.fromJson(Map<String, dynamic> json) {
@@ -19,6 +20,7 @@ class Student {
       email: json['email'] as String,
       phone: json['phone'] as String,
       matricula: json['matricula'] as String,
+      foto: json['foto'] as String,
     );
   }
 }
