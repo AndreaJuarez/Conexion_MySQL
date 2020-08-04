@@ -28,7 +28,7 @@
             email VARCHAR(50) NOT NULL,
             phone VARCHAR(15) NOT NULL,
             matricula VARCHAR(50) NOT NULL,
-            foto TEXT NOT NULL
+            foto LONGBLOB NOT NULL
             )";
  
         if($conn->query($sql) === TRUE){
@@ -67,6 +67,7 @@
         $conn->close();
         return;
     }
+
 
     //SAVE DATA
     if("INSERT_DATA" == $action){
