@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:connection_mysql/select.dart';
 import 'package:http/http.dart' as http;
 import 'Student.dart';
 import 'package:flutter/material.dart';
@@ -7,8 +6,8 @@ import 'bd_connections.dart';
 import 'insert.dart';
 import 'update.dart';
 import 'delete.dart';
-import 'select.dart';
 import 'convertidor.dart';
+import 'select.dart';
 
 class homepage extends StatefulWidget {
   homepage() : super();
@@ -290,7 +289,7 @@ class homepageState extends State<homepage> {
               ),
             ),
             ListTile(
-              leading: Icon(Icons.home, color: Colors.white),
+              leading: Icon(Icons.home, color: Colors.blueGrey),
               title: Text("Home",
                 style: TextStyle(
                     color: Colors.white,
@@ -305,7 +304,7 @@ class homepageState extends State<homepage> {
                     ));
               },),
             ListTile(
-              leading: Icon(Icons.add_to_photos, color: Colors.blue[500]),
+              leading: Icon(Icons.add_to_photos, color: Colors.blueGrey[800]),
               title: Text("Insert Data",
                 style: TextStyle(
                     color: Colors.white,
@@ -320,7 +319,7 @@ class homepageState extends State<homepage> {
                     ));
               },),
             ListTile(
-              leading: Icon(Icons.update, color: Colors.grey[500]),
+              leading: Icon(Icons.update, color: Colors.blueGrey[300]),
               title: Text("Update Data",
                 style: TextStyle(
                     color: Colors.white,
@@ -334,7 +333,7 @@ class homepageState extends State<homepage> {
                     ));
               },),
             ListTile(
-              leading: Icon(Icons.delete_forever, color: Colors.cyan[500]),
+              leading: Icon(Icons.delete_forever, color: Colors.blueGrey[600]),
               title: Text("Delete Data",
                 style: TextStyle(
                     color: Colors.white,
@@ -349,20 +348,27 @@ class homepageState extends State<homepage> {
                     ));
               },),
             ListTile(
-              leading: Icon(Icons.person, color: Colors.grey[300]),
+              leading: Icon(Icons.person, color: Colors.blueGrey[200]),
               title: Text("Select Data",
                 style: TextStyle(
                     color: Colors.white,
                     fontSize: 20
                 ),
               ),
-              onTap: () {}
+              onTap: () {
+                Navigator.push(context,
+                  new MaterialPageRoute(
+                    builder: (context)
+                        => new Select()
+                ));
+              }
             ),
           ],
         ),
       ),
       appBar: AppBar(
-        title: Text("MySQL remote BD Operations"),
+        backgroundColor: Colors.blueGrey[700],
+        title: Text("MYSQL REMOTE BD OPERATIONS"),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.add),

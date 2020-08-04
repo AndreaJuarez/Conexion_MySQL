@@ -176,9 +176,9 @@ class homepageState extends State<Update> {
   //************************CREATING DATA TABLE*****************************
   SingleChildScrollView _body() {
     return SingleChildScrollView(
-      scrollDirection: Axis.vertical,
+      scrollDirection: Axis.horizontal,
       child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
+        scrollDirection: Axis.vertical,
       child: DataTable(
         columns: [
           DataColumn(label: Text('ID')),
@@ -284,7 +284,6 @@ class homepageState extends State<Update> {
                   _isUpdating = true;
                 });
               }),
-
             ]),
         ).toList(),
       ),
@@ -297,9 +296,11 @@ class homepageState extends State<Update> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text("Update Data"),
+        backgroundColor: Colors.blueGrey[700],
+        title: Text("UPDATE DATA"),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.add),
@@ -326,7 +327,7 @@ class homepageState extends State<Update> {
                   decoration: InputDecoration(
                         labelText: "Photo",
                         suffixIcon: RaisedButton(
-                          color: Colors.deepPurple[200],
+                          color: Colors.blueGrey[600],
                             onPressed: pickImagefromGallery,
                             child: Text("Select image", textAlign: TextAlign.center,),
                         )),
@@ -371,6 +372,8 @@ class homepageState extends State<Update> {
                       child: Text('UPDATE'),
                       onPressed: (){
                         _updateData(_selectStudent);
+                        _clearValues();
+                        _showSnackBar(context, 'Datos actualizados correctamente');
                       },
                     ),
                     OutlineButton(

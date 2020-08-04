@@ -1,83 +1,60 @@
-import 'dart:convert';
-import 'package:connection_mysql/select.dart';
-import 'package:http/http.dart' as http;
-import 'Student.dart';
+import 'convertidor.dart';
+import 'student.dart';
 import 'package:flutter/material.dart';
-import 'bd_connections.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'detalles.dart';
 
 class Select extends StatefulWidget {
-  Select() : super();
-  final String title = "MySQL BD Connection";
-
   @override
-  homepageState createState() => homepageState();
+  _myHomePageState createState() => new _myHomePageState();
 }
 
-class homepageState extends State<Select> {
-  
-  GlobalKey<ScaffoldState> _scaffoldKey;
 
-  //ELEMENTOS PARA BUSQUEDA
+class _myHomePageState extends State<Select> {
+  //get fechStudent => null;
   String searchString = "";
   bool _isSearching = false;
+  TextEditingController searchController = TextEditingController();
 
-  List<Student> _Students;
-  var dbHelper;
-  TextEditingController controller_busqueda = TextEditingController();
 
-  @override
-  void initState() {
-    super.initState();
-    dbHelper = BDConnections();
-    _isSearching = false;
-    refreshList();
+
+
+  Future<List<Student>> fetchStudent() async {
+    String url = "http://192.168.0.9/Students/GetStudent.php";
+    try {
+      final response = await http.get(url);
+      // print('ListView response: ${response.body}');
+      //  return studentFromJson(response.body);
+      if (200 == response.statusCode) {
+        //Mapear la lista
+        List<Student> list = parseResponse(response.body);
+        return list;
+      } else {
+        return List<Student>();
+      }
+    } catch (e) {
+      print("Error getting datafrom SQL Server");
+      print(e.toString());
+      return List<Student>();
+    }
   }
 
-  void refreshList() {
-  setState(() {
-      _Students = dbHelper.selectData();
-    });
+ 
+
+  //ParseResponse Method
+  static List<Student> parseResponse(String responseBody) {
+    final parseData = json.decode(responseBody).cast<Map<String, dynamic>>();
+    return parseData.map<Student>((json) => Student.fromJson(json)).toList();
   }
 
-  void cleanData() {
-    controller_busqueda.text = "";
-  }
-
-  //Desplegar la snackbar
-  _showSnackBar(context, message) {
-    _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(message)));
-  }
-
-  _selectDataLike(){
-    BDConnections.selectData().then((students){
-      setState(() {
-        _Students = students;
-      });
-    });
-  }
-
-  //SELECT DATA
-  get _selectData {
-    //_showSnackBar('Loading Student...');
-    BDConnections.selectData().then((students) {
-      setState(() {
-        _Students = students;
-      });
-      //Verificar si tenemos algo de retorno
-      _showSnackBar(context, "Data Acquired");
-      print("size of Students ${students.length}");
-    });
-  }
-
-  //******************************************************************
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
-      key: _scaffoldKey,
-      appBar: new AppBar(
+      appBar: AppBar(
+        backgroundColor: Colors.blueGrey[700],
         centerTitle: true,
-        backgroundColor: Colors.blue[900],
+        automaticallyImplyLeading: false,
         title: _isSearching ? TextField(
           decoration: InputDecoration(
               hintText: "Buscando..."),
@@ -86,9 +63,9 @@ class homepageState extends State<Select> {
               searchString = value;
             });
           },
-          controller: controller_busqueda,
+          controller: searchController,
         )
-            :Text("SELECT REGISTRY BY MATRICULA",
+            :Text("SELECT USER",
           style: TextStyle(
             color: Colors.white
           ),
@@ -112,51 +89,53 @@ class homepageState extends State<Select> {
             },
           )
          ],
-        ),
+      ),
       body: Padding(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(8.0),
         child: Container(
           child: FutureBuilder(
-            future: _selectData(),
+            future: fetchStudent(),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if (snapshot.data == null) {
-                return Container(
-                  child: Center(
-                    child: Text("Cargando..."),
-                  ),
-                );
-              } else {
-                return ListView.builder(
+              // print(fetchStudent());
+              if (snapshot.hasData) {
+                return  ListView.builder(
                   itemCount: snapshot.data.length,
+                  shrinkWrap: true,
                   itemBuilder: (BuildContext context, int index) {
-                    return snapshot.data[index].matricula.contains(controller_busqueda.text)
-                        ? ListTile(
-                            leading: CircleAvatar(
-                              minRadius: 25.0,
-                              maxRadius:  25.0,
-                              backgroundColor: Colors.white,
-                              //backgroundImage: Convertir.imageFromBase64sString(snapshot.data[index].photoName).image
-                            ),
-                            title: new Text(
-                              snapshot.data[index].firstName.toString().toUpperCase(),
-                              style: TextStyle(
-                                fontSize: 18.0,
-                              ),
-                            ),
-                            subtitle: new Text(
-                              snapshot.data[index].matricula.toString().toUpperCase(),
-                              style: TextStyle(
-                                fontSize: 15.0,
-                              ),
-                            ),
-                            onTap: (){
-                              //MANDA A PANTALLA DE DETALLES
+                    Student student = snapshot.data[index];
+                    return snapshot.data[index].matricula.contains(searchController.text)
+                    ? ListTile(
+                      leading: CircleAvatar(
+                        minRadius: 30.0,
+                        maxRadius: 30.0,
+                        backgroundColor: Colors.white,
+                        backgroundImage: Convertir.imageFromBase64sString(   '${student.foto}',).image,
+                      ),
+                      title: new Text(
+                          '${student.firstName}',
+                        style: TextStyle(
+                          fontSize: 18.0,
+                        ),
+                      ),
+                      subtitle: new Text(
+                         '${student.matricula}',
+                        style: TextStyle(
+                          fontSize: 15.0,
+                        ),
+                      ),
+                      onTap: (){
+                              Navigator.push(context,
+                                new MaterialPageRoute(builder: (context)=> DetailPage(snapshot.data[index])));
                             },
-                          )
-                        : Container();
+                    )
+                    :Container();
                   },
                 );
               }
+              return Container(
+                  child: Center(
+                child: CircularProgressIndicator(),
+              ));
             },
           ),
         ),

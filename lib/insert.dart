@@ -79,6 +79,7 @@ class homepageState extends State<Insert> {
   //INSERT DATA
   _insertData() {
     if (_firstnameConroller.text.isEmpty || _lastname1Conroller.text.isEmpty || _lastname2Conroller.text.isEmpty || _emailConroller.text.isEmpty || _phoneConroller.text.isEmpty || _matriculaConroller.text.isEmpty || _fotoConroller.text.isEmpty) {
+      _showSnackBar(context, 'Datos vacios');
       print("Empy fields");
       return;
     }
@@ -160,6 +161,7 @@ class homepageState extends State<Insert> {
         _emailConroller.text = "";
         _phoneConroller.text = "";
         _matriculaConroller.text = "";
+        _fotoConroller.text = "";
   }
 
   _showValues(Student student){
@@ -178,8 +180,9 @@ class homepageState extends State<Insert> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text("Insert Data"),
-        actions: <Widget>[
+        backgroundColor: Colors.blueGrey[700],
+        title: Text("INSERT DATA"),
+        /*actions: <Widget>[
           IconButton(
             icon: Icon(Icons.add),
             onPressed: (){
@@ -190,94 +193,97 @@ class homepageState extends State<Insert> {
             onPressed: (){
               BDConnections.selectData();
             },)
-        ],
+        ],*/
       ),
-      body: Container(
-        child: Column(
-          children: <Widget>[
-            Container(
-              child: Column(children: <Widget>[
-                //TEXT FORM FIELD PARA FOTO
-                Padding(
-                     padding: const EdgeInsets.all(20.0),
-                     child: TextField(
-                  controller: _fotoConroller,
-                  decoration: InputDecoration(
-                        labelText: "Photo",
-                        suffixIcon: RaisedButton(
-                          color: Colors.deepPurple[200],
-                            onPressed: pickImagefromGallery,
-                            child: Text("Select image", textAlign: TextAlign.center,),
-                        )),
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Container(
+          child: Column(
+            children: <Widget>[
+              Container(
+                child: Column(children: <Widget>[
+                  //TEXT FORM FIELD PARA FOTO
+                  Padding(
+                       padding: const EdgeInsets.all(20.0),
+                       child: TextField(
+                    controller: _fotoConroller,
+                    decoration: InputDecoration(
+                          labelText: "Photo",
+                          suffixIcon: RaisedButton(
+                            color: Colors.blueGrey[600],
+                              onPressed: pickImagefromGallery,
+                              //child: Icon(Icons.camera_alt),
+                              child: Text("Select image", textAlign: TextAlign.center,),
+                          )),
+                    ),
+                     ),
+                  Padding(
+                    padding: EdgeInsets.all(20),
+                    child: TextField(controller: _firstnameConroller,
+                    decoration: InputDecoration.collapsed(hintText: "First Name"),),
                   ),
-                   ),
-                Padding(
-                  padding: EdgeInsets.all(20),
-                  child: TextField(controller: _firstnameConroller,
-                  decoration: InputDecoration.collapsed(hintText: "First Name"),),
+                  Padding(
+                      padding: EdgeInsets.all(20),
+                      child: TextField(controller: _lastname1Conroller,
+                        decoration: InputDecoration.collapsed(hintText: "Last Name 1"),)
+                  ),
+                  Padding(
+                      padding: EdgeInsets.all(20),
+                      child: TextField(controller: _lastname2Conroller,
+                        decoration: InputDecoration.collapsed(hintText: "Last Name 2"),)
+                  ),
+                  Padding(
+                      padding: EdgeInsets.all(20),
+                      child: TextField(controller: _emailConroller,
+                        decoration: InputDecoration.collapsed(hintText: "E-mail"),)
+                  ),
+                  Padding(
+                      padding: EdgeInsets.all(20),
+                      child: TextField(controller: _phoneConroller,
+                        decoration: InputDecoration.collapsed(hintText: "Phone"),)
+                  ),
+                  Padding(
+                      padding: EdgeInsets.all(20),
+                      child: TextField(controller: _matriculaConroller,
+                        decoration: InputDecoration.collapsed(hintText: "Matricula"),)
+                  ),
+                  //ADD AN UPDATE BUTTON AND A CANCEL BUTTON
+                  //SHOW ONLY WHEN UPDATING DATA
+                  _isUpdating ?
+                  new Row(
+                    children: <Widget>[
+                      OutlineButton(
+                        child: Text('UPDATE'),
+                        onPressed: (){
+                          _updateData(_selectStudent);
+                        },
+                      ),
+                      OutlineButton(
+                        child: Text('CANCEL'),
+                        onPressed: (){
+                          setState(() {
+                            _isUpdating = false;
+                          });
+                          _clearValues();
+                        },
+                      ),
+                    ],
+                  ):Container(),
+                 ],
                 ),
-                Padding(
-                    padding: EdgeInsets.all(20),
-                    child: TextField(controller: _lastname1Conroller,
-                      decoration: InputDecoration.collapsed(hintText: "Last Name 1"),)
-                ),
-                Padding(
-                    padding: EdgeInsets.all(20),
-                    child: TextField(controller: _lastname2Conroller,
-                      decoration: InputDecoration.collapsed(hintText: "Last Name 2"),)
-                ),
-                Padding(
-                    padding: EdgeInsets.all(20),
-                    child: TextField(controller: _emailConroller,
-                      decoration: InputDecoration.collapsed(hintText: "E-mail"),)
-                ),
-                Padding(
-                    padding: EdgeInsets.all(20),
-                    child: TextField(controller: _phoneConroller,
-                      decoration: InputDecoration.collapsed(hintText: "Phone"),)
-                ),
-                Padding(
-                    padding: EdgeInsets.all(20),
-                    child: TextField(controller: _matriculaConroller,
-                      decoration: InputDecoration.collapsed(hintText: "Matricula"),)
-                ),
-                //ADD AN UPDATE BUTTON AND A CANCEL BUTTON
-                //SHOW ONLY WHEN UPDATING DATA
-                _isUpdating ?
-                new Row(
-                  children: <Widget>[
-                    OutlineButton(
-                      child: Text('UPDATE'),
-                      onPressed: (){
-                        _updateData(_selectStudent);
-                      },
-                    ),
-                    OutlineButton(
-                      child: Text('CANCEL'),
-                      onPressed: (){
-                        setState(() {
-                          _isUpdating = false;
-                        });
-                        _clearValues();
-                      },
-                    ),
-                  ],
-                ):Container(),
-               ],
               ),
-            ),
-            /*Expanded(
-              child: _body(),
-            ),*/
-          ],
+            ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: (){
+          _showSnackBar(context, 'Datos ingresados correctamente');
           _insertData();
           _clearValues();
         },
-        child: Icon(Icons.add),
+        child: Icon(Icons.add, color: Colors.white),
+        backgroundColor: Colors.blueGrey[600],
       ),
     );
   }

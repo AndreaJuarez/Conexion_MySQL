@@ -5,7 +5,7 @@ import 'Student.dart';
 
 class BDConnections {
   //Direccion IPv4 de la computadora (Se encuentra con el comando "ipconfig")
-  static const SERVER = "http://192.168.0.6/Students/sqloperations.php";
+  static const SERVER = "http://192.168.0.9/Students/sqloperations.php";
   static const _CREATE_TABLE_COMMAND = "CREATE_TABLE";
   static const _SELECT_TABLE_COMMAND = "SELECT_TABLE";
   static const _INSERT_DATA_COMMAND = "INSERT_DATA";
